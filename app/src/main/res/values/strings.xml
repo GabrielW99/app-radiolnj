@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">app-radiolnj</string>
+    <string name="radio_la_nueva_jerusalen">Radio La Nueva Jerusalen</string>
+    <string name="todo">TODO</string>
 </resources>
