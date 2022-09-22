@@ -69,7 +69,7 @@
         app:srcCompat="@drawable/ic_baseline_volume_up_24" />
 
     <ImageView
-        android:id="@+id/platBtn"
+        android:id="@+id/playBtn"
         android:layout_width="70dp"
         android:layout_height="70dp"
         app:srcCompat="@drawable/ic_baseline_play_circle_outline_24"
@@ -80,6 +80,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/volumeBar"
         />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
