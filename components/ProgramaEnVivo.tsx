@@ -54,7 +54,7 @@ const ProgramaEnVivo = () => {
     setError(false);
     try {
       const data = await fetchJson<Program[]>(
-        'https://firebasestorage.googleapis.com/v0/b/adn2021-lnj.appspot.com/o/ProgramacionRadio%2Fprogramas.json?alt=media'
+        'https://radiolnj-api.gabrielblanco2399.workers.dev/programas'
       );
       setProgramas([...data].sort((a, b) => a.horaInicio - b.horaInicio));
     } catch (e) {

@@ -13,11 +13,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { G, Path } from "react-native-svg";
-import TrackPlayer, { State, usePlaybackState } from "react-native-track-player";
+import TrackPlayer, { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
 import { FontAwesome } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { setupPlayerOnce } from "@/services/player";
+import { playRadio, setupPlayerOnce, RADIO_TRACK_ID } from "@/services/player";
 import { MarqueeText } from "./ui/MarqueeText";
 import { useNowPlaying } from "@/hooks/useNowPlaying";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -117,6 +117,7 @@ const Waves = ({
 const RadioApp = () => {
   const insets = useSafeAreaInsets();
   const playbackState = usePlaybackState();
+  const activeTrack = useActiveTrack();
   const nowPlaying = useNowPlaying();
   const colorScheme = useColorScheme() ?? "light";
   const [volume, setVolume] = useState(1);
@@ -135,9 +136,12 @@ const RadioApp = () => {
       .catch(() => {});
   }, []);
 
-  // Refleja el tema actual en la notificación / media session
+  const isRadioActive = activeTrack?.id === RADIO_TRACK_ID;
+
+  // Refleja el tema actual en la notificación / media session (solo si la
+  // fuente activa es la radio; no pisar el título de una prédica)
   useEffect(() => {
-    if (!nowPlaying) return;
+    if (!nowPlaying || !isRadioActive) return;
     setupPlayerOnce()
       .then(() =>
         TrackPlayer.updateMetadataForTrack(0, {
@@ -148,7 +152,7 @@ const RadioApp = () => {
       .catch(() => {
         // El player todavía no está listo; se reintenta en el próximo poll
       });
-  }, [nowPlaying]);
+  }, [nowPlaying, isRadioActive]);
 
   const background = useThemeColor({}, "background");
   const surfaceMuted = useThemeColor({}, "surfaceMuted");
@@ -156,14 +160,14 @@ const RadioApp = () => {
   const primary = useThemeColor({}, "primary");
   const live = useThemeColor({}, "live");
 
+  // El estado global del player solo aplica acá si la fuente activa es la radio
   const state = playbackState.state;
-  const isPlaying = state === State.Playing;
-  const isBusy = state === State.Buffering || state === State.Loading;
-  const hasError = state === State.Error;
+  const isPlaying = isRadioActive && state === State.Playing;
+  const isBusy = isRadioActive && (state === State.Buffering || state === State.Loading);
+  const hasError = isRadioActive && state === State.Error;
 
   const togglePlayback = async () => {
     try {
-      await setupPlayerOnce();
       if (isPlaying || isBusy) {
         // Radio en vivo: detener en lugar de pausar para no acumular buffer.
         await TrackPlayer.stop();
@@ -171,11 +175,11 @@ const RadioApp = () => {
         try {
           await TrackPlayer.retry();
         } catch {
-          await TrackPlayer.play();
+          await playRadio();
         }
       } else {
-        // play() reconecta el stream al vivo.
-        await TrackPlayer.play();
+        // playRadio() reconecta el stream al vivo (y corta una prédica si sonaba).
+        await playRadio();
       }
     } catch (error) {
       console.warn("Error al controlar la reproducción:", error);

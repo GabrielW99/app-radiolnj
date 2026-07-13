@@ -8,6 +8,7 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors, Fonts } from '@/constants/Theme';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 // Geometría de la tab bar flotante (debe coincidir con tabBarStyle)
 const BAR_MARGIN = 16;
@@ -16,10 +17,13 @@ const INDICATOR_WIDTH = 18;
 // Distancia del subrayado al borde inferior de la barra
 const INDICATOR_BOTTOM = 22;
 
+const TAB_COUNT = 4;
+
 const TAB_INDEX: Record<string, number> = {
   '/': 0,
-  '/dailyVerse': 1,
-  '/media': 2,
+  '/predicas': 1,
+  '/dailyVerse': 2,
+  '/media': 3,
 };
 
 /** Subrayado que se desliza hasta el tab activo. */
@@ -28,7 +32,7 @@ function SlidingIndicator({ color, barBottom }: { color: string; barBottom: numb
   const pathname = usePathname();
   const index = TAB_INDEX[pathname] ?? 0;
 
-  const segment = (width - BAR_MARGIN * 2) / 3;
+  const segment = (width - BAR_MARGIN * 2) / TAB_COUNT;
   const targetX = index * segment + segment / 2 - INDICATOR_WIDTH / 2;
   const translateX = useRef(new Animated.Value(targetX)).current;
 
@@ -113,6 +117,17 @@ export default function TabLayout() {
             withIndicator(
               focused,
               <TabBarIcon name={focused ? 'radio' : 'radio-outline'} color={color} />
+            ),
+        }}
+      />
+      <Tabs.Screen
+        name="predicas"
+        options={{
+          title: 'Prédicas',
+          tabBarIcon: ({ color, focused }) =>
+            withIndicator(
+              focused,
+              <MaterialCommunityIcons name="podcast" size={26} color={color} />
             ),
         }}
       />
