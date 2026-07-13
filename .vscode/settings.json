@@ -1,0 +1,5 @@
+{
+    "avdmanager.sdkPath": "c:\\Program Files\\Android\\Android Studio",
+    "avdmanager.executable": "c:\\Users\\gabri\\.android\\avd\\Medium_Phone_API_36.ini",
+    "java.compile.nullAnalysis.mode": "automatic"
+}
