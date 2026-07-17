@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { AppState } from 'react-native';
 
 import { fetchJson } from '@/services/http';
-
-const NOW_PLAYING_URL = 'https://api.radiolnj.com.ar/nowplaying';
+import { Api } from '@/constants/Api';
 const POLL_INTERVAL_MS = 20000;
 
 /**
@@ -20,7 +19,7 @@ export function useNowPlaying() {
 
     const fetchNowPlaying = async () => {
       try {
-        const data = await fetchJson<{ titulo?: string }>(NOW_PLAYING_URL);
+        const data = await fetchJson<{ titulo?: string }>(Api.nowPlaying);
         if (active && data.titulo) {
           setTitulo(data.titulo);
         }

@@ -69,7 +69,7 @@ export function PredicaMiniPlayer() {
 
   if (!isPredica) return null;
 
-  const totalDuration = duration || track.duration || 0;
+  const totalDuration = duration || track?.duration || 0;
   const sliderValue = seekingValue ?? position;
 
   const togglePlayPause = async () => {

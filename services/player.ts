@@ -5,12 +5,13 @@ import TrackPlayer, {
 } from 'react-native-track-player';
 
 import { clearPosition, getSavedPosition, type Predica } from './predicas';
+import { Api } from '@/constants/Api';
 
 export const RADIO_TRACK_ID = 'radio-live';
 
 export const LIVE_STREAM_TRACK: Track = {
   id: RADIO_TRACK_ID,
-  url: 'https://server.radiostreaming.com.ar/8058/stream',
+  url: Api.liveStream,
   title: 'Radio LNJ',
   artist: '100.9 FM',
   artwork: require('@/assets/images/ministeriologo.png'),

@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { fetchJson } from './http';
+import { Api } from '@/constants/Api';
 
 export type Predica = {
   id: string;
@@ -18,10 +19,8 @@ export type Predica = {
   updated_at: string;
 };
 
-const PREDICAS_URL = 'https://radiolnj-api.gabrielblanco2399.workers.dev/predicas';
-
 export async function getPredicas(): Promise<Predica[]> {
-  const response = await fetchJson<{ data: Predica[] }>(PREDICAS_URL);
+  const response = await fetchJson<{ data: Predica[] }>(Api.predicas);
   return response.data ?? [];
 }
 

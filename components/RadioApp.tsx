@@ -243,7 +243,7 @@ const RadioApp = () => {
         >
           {isBusy ? (
             <View style={styles.busyIndicator}>
-              <ActivityIndicator size="large" color={primary} />
+              <ActivityIndicator size={84} color={primary} />
             </View>
           ) : (
             <FontAwesome6
@@ -351,7 +351,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 100,
     backgroundColor: "rgba(255, 255, 255, 0.15)",
-    maxWidth: "85%",
   },
   nowPlayingText: {
     fontFamily: Fonts.regular,

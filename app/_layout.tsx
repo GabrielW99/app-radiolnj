@@ -7,6 +7,7 @@ import { setupPlayerOnce } from '@/services/player';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import * as Notifications from 'expo-notifications';
 import { registerForPushNotificationsAsync } from '@/services/notifications';
+import { Api } from '@/constants/Api';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -45,7 +46,7 @@ export default function RootLayout() {
       registerForPushNotificationsAsync().then(async (token: string | null) => {
         if (token) {
           try {
-            await fetch('https://n8n-master-n8n.jszr3h.easypanel.host/webhook/radio-lnj/register-token', {
+            await fetch(Api.registerPushToken, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ token }),
@@ -54,7 +55,7 @@ export default function RootLayout() {
             console.warn('No se pudo registrar el token push:', e);
           }
         }
-      });
+      }).catch((e) => console.warn('Error al obtener token push:', e));
     }
   }, [loaded, playerReady]);
 

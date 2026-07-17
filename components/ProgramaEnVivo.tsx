@@ -8,6 +8,7 @@ import { Skeleton } from './ui/Skeleton';
 import { fetchJson } from '@/services/http';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { Fonts, Spacing } from '@/constants/Theme';
+import { Api } from '@/constants/Api';
 
 export type Program = {
   nombre: string;
@@ -53,9 +54,7 @@ const ProgramaEnVivo = () => {
     setLoading(true);
     setError(false);
     try {
-      const data = await fetchJson<Program[]>(
-        'https://radiolnj-api.gabrielblanco2399.workers.dev/programas'
-      );
+      const data = await fetchJson<Program[]>(Api.programas);
       setProgramas([...data].sort((a, b) => a.horaInicio - b.horaInicio));
     } catch (e) {
       console.warn('Error al cargar la programación:', e);
