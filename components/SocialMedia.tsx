@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Linking, TouchableOpacity, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
@@ -16,7 +15,6 @@ import { Fonts, Radii, Spacing, Typography } from '@/constants/Theme';
 const DIRECCION = 'Chacabuco 1730, Grand Bourg';
 const TELEFONO = ''; // ej: '+5411xxxxxxxx'
 const WHATSAPP = ''; // ej: '5411xxxxxxxx' (sin + ni espacios, formato wa.me)
-const SITIO_WEB = ''; // ej: 'https://radiolnj.com.ar'
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DIAS_ABREV = ['DOM', 'LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB'];
@@ -74,28 +72,25 @@ const SectionTitle = ({
 const SocialLink = ({
   icon,
   color,
-  label,
   url,
   accessibilityLabel,
 }: {
   icon: string;
   color: string;
-  label: string;
   url: string;
   accessibilityLabel: string;
 }) => {
-  const textSecondary = useThemeColor({}, 'textSecondary');
+  const iconCircle = useThemeColor({}, 'iconCircle');
 
   return (
     <TouchableOpacity
-      style={styles.socialLink}
+      style={[styles.socialLink, { backgroundColor: iconCircle }]}
       onPress={() => openLink(url)}
       activeOpacity={0.7}
       accessibilityRole="link"
       accessibilityLabel={accessibilityLabel}
     >
-      <FontAwesome5 name={icon} size={22} color={color} />
-      <Text style={[styles.socialLinkLabel, { color: textSecondary }]}>{label}</Text>
+      <FontAwesome5 name={icon} size={18} color={color} />
     </TouchableOpacity>
   );
 };
@@ -121,33 +116,31 @@ const RedCard = ({
   const primary = useThemeColor({}, 'primary');
 
   return (
-    <Card padding={Spacing.lg} style={styles.cardSpacing}>
+    <Card padding={0} style={styles.cardSpacing}>
       <View style={styles.redCardRow}>
-        <IconCircle name={icon} />
+        <IconCircle name={icon} size={48} />
         <View style={styles.redCardInfo}>
           <Text style={[styles.redCardLabel, { color: primary }]}>{label}</Text>
-          <Text style={[styles.redCardName, { color: text }]}>{nombre}</Text>
+          <Text style={[styles.redCardName, { color: text }]} numberOfLines={1}>{nombre}</Text>
           <Text style={[styles.redCardDescription, { color: textSecondary }]} numberOfLines={2}>
             {descripcion}
           </Text>
+          <View style={styles.socialRow}>
+            <SocialLink
+              icon="facebook"
+              color="#1877F2"
+              url={facebookUrl}
+              accessibilityLabel={`Facebook de ${nombre}`}
+            />
+            <SocialLink
+              icon="instagram"
+              color="#E1306C"
+              url={instagramUrl}
+              accessibilityLabel={`Instagram de ${nombre}`}
+            />
+          </View>
         </View>
-        <View style={styles.socialRow}>
-          <SocialLink
-            icon="facebook"
-            color="#1877F2"
-            label="Facebook"
-            url={facebookUrl}
-            accessibilityLabel={`Facebook de ${nombre}`}
-          />
-          <SocialLink
-            icon="instagram"
-            color="#E1306C"
-            label="Instagram"
-            url={instagramUrl}
-            accessibilityLabel={`Instagram de ${nombre}`}
-          />
-        </View>
-        <MaterialCommunityIcons name="chevron-right" size={22} color={textTertiary} />
+        <MaterialCommunityIcons name="chevron-right" size={22} color={textTertiary} style={styles.redCardChevron} />
       </View>
     </Card>
   );
@@ -231,7 +224,6 @@ const QuickAction = ({
 
 const SocialMediaScreen = () => {
   const insets = useSafeAreaInsets();
-  const router = useRouter();
   const background = useThemeColor({}, 'background');
   const text = useThemeColor({}, 'text');
   const textSecondary = useThemeColor({}, 'textSecondary');
@@ -320,17 +312,6 @@ const SocialMediaScreen = () => {
             onPress={() => openLink(`https://wa.me/${WHATSAPP}`)}
             disabled={!WHATSAPP}
           />
-          <QuickAction
-            icon="web"
-            label="Sitio Web"
-            onPress={() => openLink(SITIO_WEB)}
-            disabled={!SITIO_WEB}
-          />
-          <QuickAction
-            icon="radio-tower"
-            label="Escuchar Radio"
-            onPress={() => router.navigate('/(tabs)' as any)}
-          />
         </ScrollView>
       </View>
     </ScrollView>
@@ -402,8 +383,10 @@ const styles = StyleSheet.create({
   },
   redCardRow: {
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.md,
+    alignItems: 'flex-start',
+    paddingHorizontal: Spacing.xl,
+    paddingVertical: 20,
+    gap: Spacing.lg,
   },
   redCardInfo: {
     flex: 1,
@@ -413,32 +396,33 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
     letterSpacing: 0.8,
-    marginBottom: 2,
+    marginBottom: 4,
   },
   redCardName: {
     fontFamily: Fonts.regular,
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '700',
-    marginBottom: 2,
+    marginBottom: 4,
   },
   redCardDescription: {
     fontFamily: Fonts.regular,
-    fontSize: 12,
-    lineHeight: 17,
+    fontSize: 13,
+    lineHeight: 19,
+  },
+  redCardChevron: {
+    alignSelf: 'center',
   },
   socialRow: {
     flexDirection: 'row',
-    gap: Spacing.md,
+    gap: Spacing.sm,
+    marginTop: Spacing.md,
   },
   socialLink: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: Spacing.xs,
-    width: 56,
-  },
-  socialLinkLabel: {
-    fontFamily: Fonts.regular,
-    fontSize: 10,
-    fontWeight: '600',
   },
   reunionRow: {
     flexDirection: 'row',

@@ -15,7 +15,7 @@ const BAR_MARGIN = 16;
 const BAR_HEIGHT = 66;
 const INDICATOR_WIDTH = 18;
 // Distancia del subrayado al borde inferior de la barra
-const INDICATOR_BOTTOM = 22;
+const INDICATOR_BOTTOM = 5;
 
 const TAB_COUNT = 4;
 

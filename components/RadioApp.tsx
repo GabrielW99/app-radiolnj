@@ -166,7 +166,11 @@ const RadioApp = () => {
   const isBusy = isRadioActive && (state === State.Buffering || state === State.Loading);
   const hasError = isRadioActive && state === State.Error;
 
+  const isTogglingRef = useRef(false);
+
   const togglePlayback = async () => {
+    if (isTogglingRef.current) return;
+    isTogglingRef.current = true;
     try {
       if (isPlaying || isBusy) {
         // Radio en vivo: detener en lugar de pausar para no acumular buffer.
@@ -183,6 +187,8 @@ const RadioApp = () => {
       }
     } catch (error) {
       console.warn("Error al controlar la reproducción:", error);
+    } finally {
+      isTogglingRef.current = false;
     }
   };
 

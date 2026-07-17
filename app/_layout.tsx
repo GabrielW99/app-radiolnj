@@ -2,7 +2,7 @@ import { DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native'
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { setupPlayerOnce } from '@/services/player';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import * as Notifications from 'expo-notifications';
@@ -26,14 +26,21 @@ export default function RootLayout() {
     PlusJakartaSans: require('@/assets/fonts/PlusJakartaSans.ttf'),
   });
 
+  const [playerReady, setPlayerReady] = useState(false);
+
   useEffect(() => {
-    setupPlayerOnce().catch((error) => {
-      console.warn('No se pudo inicializar el reproductor:', error);
-    });
+    let cancelled = false;
+    const timeout = setTimeout(() => { if (!cancelled) setPlayerReady(true); }, 8000);
+    setupPlayerOnce()
+      .catch((error) => console.warn('No se pudo inicializar el reproductor:', error))
+      .finally(() => {
+        if (!cancelled) { clearTimeout(timeout); setPlayerReady(true); }
+      });
+    return () => { cancelled = true; clearTimeout(timeout); };
   }, []);
 
   useEffect(() => {
-    if (loaded) {
+    if (loaded && playerReady) {
       SplashScreen.hideAsync();
       registerForPushNotificationsAsync().then(async (token: string | null) => {
         if (token) {
@@ -49,9 +56,9 @@ export default function RootLayout() {
         }
       });
     }
-  }, [loaded]);
+  }, [loaded, playerReady]);
 
-  if (!loaded) {
+  if (!loaded || !playerReady) {
     return null;
   }
 

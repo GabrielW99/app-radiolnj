@@ -32,7 +32,6 @@ export function AnimatedTabIcon({ focused, children }: Props) {
   return (
     <View style={{ alignItems: 'center' }}>
       <Animated.View style={{ transform: [{ scale: iconScale }] }}>{children}</Animated.View>
-      <View style={{ height: 3, marginTop: 3 }} />
     </View>
   );
 }
