@@ -102,6 +102,7 @@ export default function TabLayout() {
             },
           }),
         },
+        tabBarLabelPosition: 'below-icon',
         tabBarLabelStyle: {
           fontFamily: Fonts.regular,
           fontSize: 11,

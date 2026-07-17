@@ -23,6 +23,7 @@ import { useNowPlaying } from "@/hooks/useNowPlaying";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { BrandGradients, Fonts, Spacing, Typography, WaveOpacities } from "@/constants/Theme";
+import { Skeleton } from "./ui/Skeleton";
 
 const WAVES_HEIGHT = 110;
 const VOLUME_STORAGE_KEY = "@radio_volume";
@@ -217,12 +218,16 @@ const RadioApp = () => {
           <Text style={styles.radioName}>Radio LNJ</Text>
           <Text style={styles.radioFrequency}>100.9 FM</Text>
 
-          {nowPlaying && (
-            <View style={styles.nowPlayingRow}>
-              <FontAwesome6 name="music" size={12} color="rgba(255, 255, 255, 0.9)" />
-              <MarqueeText text={nowPlaying} style={styles.nowPlayingText} />
-            </View>
-          )}
+          <View style={styles.nowPlayingRow}>
+            {nowPlaying ? (
+              <>
+                <FontAwesome6 name="music" size={12} color="rgba(255, 255, 255, 0.9)" />
+                <MarqueeText text={nowPlaying} style={styles.nowPlayingText} />
+              </>
+            ) : (
+              <Skeleton width={140} height={14} borderRadius={7} style={{ opacity: 0.3 }} />
+            )}
+          </View>
         </View>
 
         <Waves fillColor={background} opacities={WaveOpacities[colorScheme]} animated={isPlaying} />
@@ -339,6 +344,7 @@ const styles = StyleSheet.create({
   nowPlayingRow: {
     flexDirection: "row",
     alignItems: "center",
+    maxWidth: "85%",
     gap: Spacing.sm,
     marginTop: Spacing.md,
     paddingHorizontal: 14,
